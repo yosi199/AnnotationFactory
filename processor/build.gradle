@@ -1,0 +1,19 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':annotations')
+    compile 'com.squareup:javapoet:1.10.0'
+}
+
+task customFatJar(type: Jar) {
+    manifest {
+        attributes 'CustomProcessor': 'com.lifebeam.vi.processor'
+    }
+    baseName = 'processor'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
